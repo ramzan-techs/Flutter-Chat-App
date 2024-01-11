@@ -1,6 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:we_chat/main.dart';
-
+import 'package:google_sign_in/google_sign_in.dart';
 import '../home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -22,9 +23,36 @@ class _LoginScreenState extends State<LoginScreen> {
     });
   }
 
+  _handleGoogleBtn() {
+    _signInWithGoogle().then((user) {
+      print("\n user : ${user.user}");
+      print("\n user : ${user.additionalUserInfo}");
+
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (_) => HomeScreen()));
+    });
+  }
+
+  Future<UserCredential> _signInWithGoogle() async {
+    // Trigger the authentication flow
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+    // Obtain the auth details from the request
+    final GoogleSignInAuthentication? googleAuth =
+        await googleUser?.authentication;
+
+    // Create a new credential
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken,
+    );
+
+    // Once signed in, return the UserCredential
+    return await FirebaseAuth.instance.signInWithCredential(credential);
+  }
+
   @override
   Widget build(BuildContext context) {
-    mq = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         title: Text("Welcome to We Chat"),
@@ -48,8 +76,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   elevation: 1,
                 ),
                 onPressed: () {
-                  Navigator.pushReplacement(
-                      context, MaterialPageRoute(builder: (_) => HomeScreen()));
+                  _handleGoogleBtn();
                 },
                 icon: Image.asset(
                   'images/google.png',

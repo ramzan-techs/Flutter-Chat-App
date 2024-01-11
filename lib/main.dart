@@ -1,14 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/services.dart';
+import 'package:we_chat/screens/splash_screen.dart';
 import 'firebase_options.dart';
-import 'screens/auth/login_screen.dart';
 
 late Size mq;
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  _initializeFireBase();
-  runApp(const MyApp());
+
+  // to show app on whole screen without status bar
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+
+  //to enable to run our app only in portrait mode
+  SystemChrome.setPreferredOrientations(
+          [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown])
+      .then((value) {
+    _initializeFireBase();
+    runApp(const MyApp());
+  });
 }
 
 class MyApp extends StatelessWidget {
@@ -32,7 +42,7 @@ class MyApp extends StatelessWidget {
                 fontSize: 20),
             iconTheme: IconThemeData(color: Colors.black),
           )),
-      home: LoginScreen(),
+      home: SplashScreen(),
     );
   }
 }
