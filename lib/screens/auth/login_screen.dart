@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:we_chat/helper/dialogs.dart';
 import 'package:we_chat/main.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import '../../api/apis.dart';
 import '../home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -64,7 +65,7 @@ class _LoginScreenState extends State<LoginScreen> {
       );
 
       // Once signed in, return the UserCredential
-      return await FirebaseAuth.instance.signInWithCredential(credential);
+      return await APIs.auth.signInWithCredential(credential);
     } catch (e) {
       print('\n _signInWithGoogle : $e');
       Dialogs.showSnackBar(context, 'Something Went Wrong (Check Internet!)');
