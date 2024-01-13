@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:we_chat/models/chat_user.dart';
 
 import '../main.dart';
 
 class ChatUserCard extends StatefulWidget {
-  const ChatUserCard({super.key});
+  final ChatUser user;
+  const ChatUserCard({super.key, required this.user});
 
   @override
   State<ChatUserCard> createState() => _ChatUserCardState();
@@ -30,11 +32,11 @@ class _ChatUserCardState extends State<ChatUserCard> {
           ),
 
           //user name
-          title: Text('User Name'),
+          title: Text(widget.user.name),
 
           //user last message in chat
           subtitle: Text(
-            'user\'s Last Message',
+            widget.user.about,
             maxLines: 1,
           ),
 
