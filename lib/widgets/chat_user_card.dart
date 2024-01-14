@@ -1,3 +1,5 @@
+import 'package:cached_network_image/cached_network_image.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:we_chat/models/chat_user.dart';
@@ -27,8 +29,17 @@ class _ChatUserCardState extends State<ChatUserCard> {
         onTap: () {},
         child: ListTile(
           //user profile pic
-          leading: CircleAvatar(
-            child: Icon(CupertinoIcons.person),
+          leading: ClipRRect(
+            borderRadius: BorderRadius.circular(mq.height * .3),
+            child: CachedNetworkImage(
+              fit: BoxFit.fill,
+              height: mq.height * .055,
+              width: mq.height * .055,
+              imageUrl: widget.user.image,
+              errorWidget: (context, url, error) => const CircleAvatar(
+                child: Icon(CupertinoIcons.person),
+              ),
+            ),
           ),
 
           //user name
