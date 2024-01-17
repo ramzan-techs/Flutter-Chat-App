@@ -1,8 +1,11 @@
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:we_chat/api/apis.dart';
 import 'package:we_chat/helper/dialogs.dart';
 import 'package:we_chat/main.dart';
 import 'package:we_chat/models/chat_user.dart';
@@ -17,142 +20,164 @@ class UserProfileScreen extends StatefulWidget {
 }
 
 class _UserProfileScreenState extends State<UserProfileScreen> {
+  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        title: Text('Profile'),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            SizedBox(
-              width: mq.width,
-              height: 30,
-            ),
-            Stack(
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          title: Text('Profile'),
+        ),
+        body: Form(
+          key: _formKey,
+          child: SingleChildScrollView(
+            child: Column(
               children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(mq.height * .33),
-                  child: CachedNetworkImage(
-                    height: mq.width * .4,
-                    width: mq.width * .4,
-                    fit: BoxFit.fill,
-                    imageUrl: widget.user.image,
-                    errorWidget: (context, url, error) =>
-                        Icon(CupertinoIcons.person),
+                SizedBox(
+                  width: mq.width,
+                  height: 30,
+                ),
+                Stack(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(mq.height * .33),
+                      child: CachedNetworkImage(
+                        height: mq.width * .4,
+                        width: mq.width * .4,
+                        fit: BoxFit.fill,
+                        imageUrl: widget.user.image,
+                        errorWidget: (context, url, error) =>
+                            Icon(CupertinoIcons.person),
+                      ),
+                    ),
+                    Positioned(
+                      bottom: 0,
+                      right: 0,
+                      child: MaterialButton(
+                        shape: CircleBorder(),
+                        onPressed: () {},
+                        color: Colors.white,
+                        child: Icon(Icons.edit),
+                      ),
+                    )
+                  ],
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  widget.user.email,
+                  style: TextStyle(color: Colors.black, fontSize: 18),
+                ),
+                SizedBox(
+                  height: mq.height * .05,
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: mq.width * .04),
+                  child: TextFormField(
+                    onSaved: (val) => APIs.self.name = val ?? '',
+                    validator: (val) =>
+                        val != null && val.isNotEmpty ? null : 'Required Field',
+                    decoration: InputDecoration(
+                      prefixIcon: Icon(
+                        Icons.person,
+                        color: Colors.blue,
+                      ),
+                      hintText: 'eg. Ramzan',
+                      label: Text('Name', style: TextStyle(fontSize: 18)),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.blue, width: 2.5)),
+                      disabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black)),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                    ),
+                    initialValue: widget.user.name,
                   ),
                 ),
-                Positioned(
-                  bottom: 0,
-                  right: 0,
-                  child: MaterialButton(
-                    shape: CircleBorder(),
-                    onPressed: () {},
-                    color: Colors.white,
-                    child: Icon(Icons.edit),
+                SizedBox(
+                  height: mq.height * .02,
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: mq.width * .04),
+                  child: TextFormField(
+                    onSaved: (val) => APIs.self.about = val ?? '',
+                    validator: (val) =>
+                        val != null && val.isNotEmpty ? null : 'Required Field',
+                    decoration: InputDecoration(
+                      prefixIcon: Icon(
+                        Icons.info,
+                        color: Colors.blue,
+                      ),
+                      hintText: 'eg. Feeling Happy!',
+                      label: Text(
+                        'About',
+                        style: TextStyle(fontSize: 18),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.blue, width: 2.5)),
+                      disabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black)),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                    ),
+                    initialValue: widget.user.about,
                   ),
-                )
+                ),
+                SizedBox(
+                  height: mq.height * .07,
+                ),
+                ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                        foregroundColor: Colors.black,
+                        fixedSize: Size(mq.width * .4, mq.height * .06)),
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        log('Inside Validator');
+                        _formKey.currentState!.save();
+                        APIs.updateUserInfo();
+                        Dialogs.showSnackBar(
+                            context, 'Profile updated successfully!');
+                      }
+                    },
+                    icon: Icon(
+                      Icons.update,
+                      size: 35,
+                    ),
+                    label: Text(
+                      'Update',
+                      style: TextStyle(fontSize: 20),
+                    )),
               ],
             ),
-            SizedBox(
-              height: 10,
-            ),
-            Text(
-              widget.user.email,
-              style: TextStyle(color: Colors.black, fontSize: 18),
-            ),
-            SizedBox(
-              height: mq.height * .05,
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: mq.width * .04),
-              child: TextFormField(
-                decoration: InputDecoration(
-                  prefixIcon: Icon(
-                    Icons.person,
-                    color: Colors.blue,
-                  ),
-                  hintText: 'eg. Ramzan',
-                  label: Text('Name', style: TextStyle(fontSize: 18)),
-                  focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.blue, width: 2.5)),
-                  disabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.black)),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10)),
-                ),
-                initialValue: widget.user.name,
-              ),
-            ),
-            SizedBox(
-              height: mq.height * .02,
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: mq.width * .04),
-              child: TextFormField(
-                decoration: InputDecoration(
-                  prefixIcon: Icon(
-                    Icons.info,
-                    color: Colors.blue,
-                  ),
-                  hintText: 'eg. Feeling Happy!',
-                  label: Text(
-                    'About',
-                    style: TextStyle(fontSize: 18),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.blue, width: 2.5)),
-                  disabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.black)),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10)),
-                ),
-                initialValue: widget.user.about,
-              ),
-            ),
-            SizedBox(
-              height: mq.height * .07,
-            ),
-            ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    foregroundColor: Colors.black,
-                    fixedSize: Size(mq.width * .4, mq.height * .06)),
-                onPressed: () {},
-                icon: Icon(
-                  Icons.update,
-                  size: 35,
-                ),
-                label: Text(
-                  'Update',
-                  style: TextStyle(fontSize: 20),
-                )),
-          ],
+          ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        shape: StadiumBorder(),
-        backgroundColor: Colors.redAccent,
-        onPressed: () async {
-          //show progress bar
-          Dialogs.showProgressBar(context);
-          await FirebaseAuth.instance.signOut().then((value) async {
-            await GoogleSignIn().signOut();
-            // for hiding progress bar
-            Navigator.pop(context);
-            //for poping out home screen form stack
-            Navigator.pop(context);
-            //for moving to login screen
-            Navigator.pushReplacement(
-                context, MaterialPageRoute(builder: (_) => LoginScreen()));
-          });
-        },
-        elevation: 2,
-        icon: Icon(Icons.logout),
-        label: Text('Logout'),
-        isExtended: true,
+        floatingActionButton: FloatingActionButton.extended(
+          shape: StadiumBorder(),
+          backgroundColor: Colors.redAccent,
+          onPressed: () async {
+            //show progress bar
+            Dialogs.showProgressBar(context);
+            await FirebaseAuth.instance.signOut().then((value) async {
+              await GoogleSignIn().signOut();
+              // for hiding progress bar
+              Navigator.pop(context);
+              //for poping out home screen form stack
+              Navigator.pop(context);
+              //for moving to login screen
+              Navigator.pushReplacement(
+                  context, MaterialPageRoute(builder: (_) => LoginScreen()));
+            });
+          },
+          elevation: 2,
+          icon: Icon(Icons.logout),
+          label: Text('Logout'),
+        ),
       ),
     );
   }
