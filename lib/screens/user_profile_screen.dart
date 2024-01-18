@@ -1,10 +1,12 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:we_chat/api/apis.dart';
 import 'package:we_chat/helper/dialogs.dart';
 import 'package:we_chat/main.dart';
@@ -21,6 +23,7 @@ class UserProfileScreen extends StatefulWidget {
 
 class _UserProfileScreenState extends State<UserProfileScreen> {
   final _formKey = GlobalKey<FormState>();
+  bool _isChanged = false;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -46,18 +49,23 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       child: CachedNetworkImage(
                         height: mq.width * .4,
                         width: mq.width * .4,
-                        fit: BoxFit.fill,
-                        imageUrl: widget.user.image,
+                        fit: BoxFit.cover,
+                        placeholder: (context, url) => Icon(Icons.person),
+                        imageUrl:
+                            _isChanged ? APIs.self.image : widget.user.image,
                         errorWidget: (context, url, error) =>
                             Icon(CupertinoIcons.person),
                       ),
                     ),
                     Positioned(
+                      //profile change button
                       bottom: 0,
                       right: 0,
                       child: MaterialButton(
                         shape: CircleBorder(),
-                        onPressed: () {},
+                        onPressed: () {
+                          _showBottomSheet();
+                        },
                         color: Colors.white,
                         child: Icon(Icons.edit),
                       ),
@@ -134,8 +142,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 ElevatedButton.icon(
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.blue,
-                        foregroundColor: Colors.black,
-                        fixedSize: Size(mq.width * .4, mq.height * .06)),
+                        foregroundColor: Colors.white,
+                        fixedSize: Size(mq.width * .6, mq.height * .06)),
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         log('Inside Validator');
@@ -180,5 +188,86 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         ),
       ),
     );
+  }
+
+  void _showBottomSheet() {
+    showModalBottomSheet(
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+        ),
+        context: context,
+        builder: (_) {
+          return ListView(
+            shrinkWrap: true,
+            padding:
+                EdgeInsets.only(top: mq.height * .03, bottom: mq.height * .05),
+            children: [
+              Text(
+                "Pick Profile Picture",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+                textAlign: TextAlign.center,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  InkWell(
+                    borderRadius: BorderRadius.circular(100),
+                    onTap: () async {
+                      final ImagePicker picker = ImagePicker();
+
+                      final XFile? image = await picker.pickImage(
+                          source: ImageSource.gallery, imageQuality: 80);
+                      if (image != null) {
+                        log('Image Path : ${image.path}');
+                        Dialogs.showProgressBar(context);
+                        await APIs.updateUserProfilePic(File(image.path));
+                        Navigator.pop(context);
+                        Navigator.pop(context);
+                        Dialogs.showSnackBar(
+                            context, 'Pic Updated Scuccessfuly!');
+                        setState(() {
+                          _isChanged = true;
+                        });
+                      }
+                    },
+                    child: Image.asset(
+                      'images/gallery.png',
+                      height: mq.height * .15,
+                      width: mq.width * .25,
+                    ),
+                  ),
+                  InkWell(
+                    borderRadius: BorderRadius.circular(100),
+                    onTap: () async {
+                      final ImagePicker picker = ImagePicker();
+
+                      final XFile? image = await picker.pickImage(
+                          source: ImageSource.camera, imageQuality: 80);
+                      if (image != null) {
+                        log('Image Path : ${image.path}');
+                        Dialogs.showProgressBar(context);
+                        await APIs.updateUserProfilePic(File(image.path));
+                        Navigator.pop(context);
+                        Navigator.pop(context);
+                        Dialogs.showSnackBar(
+                            context, 'Pic Updated Scuccessfuly!');
+                        setState(() {
+                          _isChanged = true;
+                        });
+                      }
+                    },
+                    child: Image.asset(
+                      'images/camera.png',
+                      height: mq.height * .15,
+                      width: mq.width * .25,
+                    ),
+                  )
+                ],
+              )
+            ],
+          );
+        });
   }
 }

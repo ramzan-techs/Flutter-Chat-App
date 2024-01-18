@@ -21,8 +21,9 @@ class _SplashScreenState extends State<SplashScreen> {
     Future.delayed(Duration(milliseconds: 2000), () {
       // setting screen back to edge to edge means show status bar
       SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-      SystemChrome.setSystemUIOverlayStyle(
-          SystemUiOverlayStyle(statusBarColor: Colors.transparent));
+      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          systemNavigationBarColor: Colors.white));
       if (APIs.auth.currentUser != null) {
         log('\n User : ${APIs.auth.currentUser}');
         //navigating to home screen if user already login
