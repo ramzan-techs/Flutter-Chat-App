@@ -36,8 +36,8 @@ class _LoginScreenState extends State<LoginScreen> {
       Navigator.pop(context);
 
       if (user != null) {
-        print("\n user : ${user.user}");
-        print("\n user : ${user.additionalUserInfo}");
+        // print("\n user : ${user.user}");
+        // print("\n user : ${user.additionalUserInfo}");
 
         if (await APIs.userExist()) {
           Navigator.pushReplacement(

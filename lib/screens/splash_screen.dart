@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+
 import 'package:we_chat/api/apis.dart';
 import 'package:we_chat/screens/home_screen.dart';
-import 'dart:developer';
 
 import '../main.dart';
 import 'auth/login_screen.dart';
@@ -20,12 +19,11 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     Future.delayed(Duration(milliseconds: 2000), () {
       // setting screen back to edge to edge means show status bar
-      SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-          statusBarColor: Colors.transparent,
-          systemNavigationBarColor: Colors.white));
+      // SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+      // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      // systemNavigationBarColor: Colors.white, statusBarColor: Colors.red));
       if (APIs.auth.currentUser != null) {
-        log('\n User : ${APIs.auth.currentUser}');
+        // log('\n User : ${APIs.auth.currentUser}');
         //navigating to home screen if user already login
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (_) => HomeScreen()));

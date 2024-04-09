@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:we_chat/models/chat_user.dart';
+import 'package:we_chat/screens/chat_screen.dart';
 
 import '../main.dart';
 
@@ -26,13 +27,20 @@ class _ChatUserCardState extends State<ChatUserCard> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       child: InkWell(
         borderRadius: BorderRadius.circular(15),
-        onTap: () {},
+        onTap: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (_) => ChatScreen(
+                        user: widget.user,
+                      )));
+        },
         child: ListTile(
           //user profile pic
           leading: ClipRRect(
             borderRadius: BorderRadius.circular(mq.height * .3),
             child: CachedNetworkImage(
-              fit: BoxFit.fill,
+              fit: BoxFit.cover,
               height: mq.height * .055,
               width: mq.height * .055,
               placeholder: (context, url) => Icon(Icons.person),

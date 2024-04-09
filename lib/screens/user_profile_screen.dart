@@ -217,8 +217,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     onTap: () async {
                       final ImagePicker picker = ImagePicker();
 
-                      final XFile? image = await picker.pickImage(
-                          source: ImageSource.gallery, imageQuality: 80);
+                      final XFile? image =
+                          await picker.pickImage(source: ImageSource.gallery);
                       if (image != null) {
                         log('Image Path : ${image.path}');
                         Dialogs.showProgressBar(context);
@@ -243,8 +243,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     onTap: () async {
                       final ImagePicker picker = ImagePicker();
 
-                      final XFile? image = await picker.pickImage(
-                          source: ImageSource.camera, imageQuality: 80);
+                      final XFile? image =
+                          await picker.pickImage(source: ImageSource.camera);
                       if (image != null) {
                         log('Image Path : ${image.path}');
                         Dialogs.showProgressBar(context);
