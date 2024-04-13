@@ -60,13 +60,19 @@ class appBar extends StatelessWidget {
   }
 }
 
-class ChatInputField extends StatelessWidget {
+class ChatInputField extends StatefulWidget {
   const ChatInputField({
     super.key,
   });
 
   @override
+  State<ChatInputField> createState() => _ChatInputFieldState();
+}
+
+class _ChatInputFieldState extends State<ChatInputField> {
+  @override
   Widget build(BuildContext context) {
+    int _currentLines = 1;
     return Padding(
       padding: EdgeInsets.only(
           left: mq.width * 0.015,
@@ -76,7 +82,12 @@ class ChatInputField extends StatelessWidget {
         children: [
           Expanded(
             child: Card(
-              shape: StadiumBorder(),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(30))),
+              // _currentLines == 1
+              //     ? StadiumBorder()
+              //     : RoundedRectangleBorder(
+              //         borderRadius: BorderRadius.circular(10)),
               child: Row(
                 children: [
                   IconButton(
@@ -88,10 +99,21 @@ class ChatInputField extends StatelessWidget {
                     child: TextField(
                       keyboardType: TextInputType.multiline,
                       maxLines: 4,
+                      minLines: 1,
                       decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: 'Enter message...',
                           hintStyle: TextStyle(color: Colors.blueAccent)),
+                      onChanged: (value) {
+                        if (_currentLines == 1) {
+                          if (value.split('\n').length > 1) {
+                            print(_currentLines);
+                            setState(() {
+                              _currentLines = 2;
+                            });
+                          }
+                        }
+                      },
                     ),
                   ),
                   IconButton(

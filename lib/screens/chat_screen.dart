@@ -9,6 +9,7 @@ import 'package:we_chat/api/apis.dart';
 import 'package:we_chat/models/chat_user.dart';
 import 'package:we_chat/models/message.dart';
 import 'package:we_chat/screens/chat_screen_widgets.dart';
+import 'package:we_chat/widgets/chat_card.dart';
 
 class ChatScreen extends StatefulWidget {
   final ChatUser user;
@@ -58,11 +59,32 @@ class _ChatScreenState extends State<ChatScreen> {
                   //         .map((e) => ChatUser.fromJson(e.data()))
                   //         .toList() ??
                   //     [];
+                  _list.clear();
+                  _list = [
+                    Message(
+                        toId: 'xyz',
+                        read: "12:00",
+                        type: Type.text,
+                        sent: '12:00',
+                        fromId: APIs.user.uid,
+                        msg: "Hello"),
+                    Message(
+                        toId: APIs.user.uid,
+                        read: "12:00",
+                        type: Type.text,
+                        sent: '12:00',
+                        fromId: "zyx",
+                        msg: "Hello2")
+                  ];
 
                   if (_list.isNotEmpty) {
-                    return ListView.builder(itemBuilder: (context, index) {
-                      return Text('Message: ${_list[index]}');
-                    });
+                    return ListView.builder(
+                        itemCount: _list.length,
+                        itemBuilder: (context, index) {
+                          return ChatCard(
+                            message: _list[index],
+                          );
+                        });
                   } else {
                     return Center(
                       child: Text(

@@ -1,8 +1,11 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:we_chat/api/apis.dart';
+import 'package:we_chat/main.dart';
+import 'package:we_chat/models/message.dart';
 
 class ChatCard extends StatefulWidget {
-  const ChatCard({super.key});
-
+  const ChatCard({super.key, required this.message});
+  final Message message;
   @override
   State<ChatCard> createState() => _ChatCardState();
 }
@@ -10,6 +13,109 @@ class ChatCard extends StatefulWidget {
 class _ChatCardState extends State<ChatCard> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return APIs.user.uid == widget.message.fromId ? _greenMsg() : _blueMsg();
+  }
+
+  Widget _greenMsg() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Flexible(
+          child: Container(
+            padding: EdgeInsets.only(
+                top: mq.width * 0.03,
+                left: mq.width * 0.03,
+                right: mq.width * 0.03,
+                bottom: mq.width * 0.01),
+            margin: EdgeInsets.only(
+                top: mq.width * 0.03,
+                right: mq.width * 0.04,
+                left: mq.width * 0.2),
+            decoration: BoxDecoration(
+              color: Color.fromARGB(255, 208, 223, 234),
+              border: Border.all(color: Colors.lightBlue),
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(30),
+                  topRight: Radius.circular(30),
+                  bottomLeft: Radius.circular(30)),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: Text(
+                    "Long msg hkj khfzkjhfkx kjhk hfkjh kz hkzxh vkjhkxhkxjhxkk k zx ",
+                    style: TextStyle(fontSize: 18, color: Colors.black87),
+                  ),
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      widget.message.sent,
+                      style: TextStyle(fontSize: 13),
+                    ),
+                    SizedBox(
+                      width: 4,
+                    ),
+                    Icon(
+                      Icons.done_all_rounded,
+                      size: 18,
+                    )
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _blueMsg() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Flexible(
+          child: Container(
+            padding: EdgeInsets.only(
+                top: mq.width * 0.03,
+                left: mq.width * 0.03,
+                right: mq.width * 0.03,
+                bottom: mq.width * 0.01),
+            margin: EdgeInsets.only(
+                top: mq.width * 0.03,
+                bottom: mq.width * 0.03,
+                left: mq.width * 0.04,
+                right: mq.width * 0.2),
+            decoration: BoxDecoration(
+              color: Color.fromARGB(255, 145, 225, 167),
+              border: Border.all(color: Colors.green),
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(30),
+                  topRight: Radius.circular(30),
+                  bottomRight: Radius.circular(30)),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: Text(
+                    widget.message.msg,
+                    style: TextStyle(fontSize: 18, color: Colors.black87),
+                  ),
+                ),
+                Text(
+                  widget.message.sent,
+                  style: TextStyle(fontSize: 13),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }
