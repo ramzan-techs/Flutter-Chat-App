@@ -32,12 +32,12 @@ class _ChatCardState extends State<ChatCard> {
                 right: mq.width * 0.04,
                 left: mq.width * 0.2),
             decoration: BoxDecoration(
-              color: Color.fromARGB(255, 208, 223, 234),
-              border: Border.all(color: Colors.lightBlue),
+              color: Color.fromARGB(255, 145, 225, 167),
+              border: Border.all(color: Colors.green),
               borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(30),
-                  topRight: Radius.circular(30),
-                  bottomLeft: Radius.circular(30)),
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
+                  bottomLeft: Radius.circular(20)),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.end,
@@ -45,7 +45,7 @@ class _ChatCardState extends State<ChatCard> {
                 Padding(
                   padding: const EdgeInsets.only(right: 8),
                   child: Text(
-                    "Long msg hkj khfzkjhfkx kjhk hfkjh kz hkzxh vkjhkxhkxjhxkk k zx ",
+                    widget.message.msg,
                     style: TextStyle(fontSize: 18, color: Colors.black87),
                   ),
                 ),
@@ -90,8 +90,8 @@ class _ChatCardState extends State<ChatCard> {
                 left: mq.width * 0.04,
                 right: mq.width * 0.2),
             decoration: BoxDecoration(
-              color: Color.fromARGB(255, 145, 225, 167),
-              border: Border.all(color: Colors.green),
+              color: Color.fromARGB(255, 208, 223, 234),
+              border: Border.all(color: Colors.lightBlue),
               borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(30),
                   topRight: Radius.circular(30),

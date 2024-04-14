@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -42,40 +39,21 @@ class _ChatScreenState extends State<ChatScreen> {
         body: Column(children: [
           Expanded(
               child: StreamBuilder(
-            stream: APIs.getAllMessages(),
+            stream: APIs.getAllMessages(widget.user),
             builder: ((context, snapshot) {
               switch (snapshot.connectionState) {
                 case ConnectionState.waiting:
                 case ConnectionState.none:
                   return const Center(
-                    child: CircularProgressIndicator(),
+                    child: SizedBox(),
                   );
 
                 case ConnectionState.active:
                 case ConnectionState.done:
                   final data = snapshot.data?.docs;
-                  log('Message : ${jsonEncode(data![0].data())}');
-                  // _list = data
-                  //         .map((e) => ChatUser.fromJson(e.data()))
-                  //         .toList() ??
-                  //     [];
-                  _list.clear();
-                  _list = [
-                    Message(
-                        toId: 'xyz',
-                        read: "12:00",
-                        type: Type.text,
-                        sent: '12:00',
-                        fromId: APIs.user.uid,
-                        msg: "Hello"),
-                    Message(
-                        toId: APIs.user.uid,
-                        read: "12:00",
-                        type: Type.text,
-                        sent: '12:00',
-                        fromId: "zyx",
-                        msg: "Hello2")
-                  ];
+                  _list =
+                      data?.map((e) => Message.fromJson(e.data())).toList() ??
+                          [];
 
                   if (_list.isNotEmpty) {
                     return ListView.builder(
@@ -96,7 +74,7 @@ class _ChatScreenState extends State<ChatScreen> {
               }
             }),
           )),
-          ChatInputField()
+          ChatInputField(chatUser: widget.user)
         ]),
       ),
     );

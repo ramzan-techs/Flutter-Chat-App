@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:we_chat/api/apis.dart';
 import 'package:we_chat/main.dart';
 import 'package:we_chat/models/chat_user.dart';
 
@@ -63,7 +64,10 @@ class appBar extends StatelessWidget {
 class ChatInputField extends StatefulWidget {
   const ChatInputField({
     super.key,
+    required this.chatUser,
   });
+
+  final ChatUser chatUser;
 
   @override
   State<ChatInputField> createState() => _ChatInputFieldState();
@@ -72,7 +76,7 @@ class ChatInputField extends StatefulWidget {
 class _ChatInputFieldState extends State<ChatInputField> {
   @override
   Widget build(BuildContext context) {
-    int _currentLines = 1;
+    final _textEditingController = TextEditingController();
     return Padding(
       padding: EdgeInsets.only(
           left: mq.width * 0.015,
@@ -97,6 +101,7 @@ class _ChatInputFieldState extends State<ChatInputField> {
                   ),
                   Expanded(
                     child: TextField(
+                      controller: _textEditingController,
                       keyboardType: TextInputType.multiline,
                       maxLines: 4,
                       minLines: 1,
@@ -104,24 +109,18 @@ class _ChatInputFieldState extends State<ChatInputField> {
                           border: InputBorder.none,
                           hintText: 'Enter message...',
                           hintStyle: TextStyle(color: Colors.blueAccent)),
-                      onChanged: (value) {
-                        if (_currentLines == 1) {
-                          if (value.split('\n').length > 1) {
-                            print(_currentLines);
-                            setState(() {
-                              _currentLines = 2;
-                            });
-                          }
-                        }
-                      },
                     ),
                   ),
+
+                  // image picker from gallery
                   IconButton(
                       onPressed: () {},
                       icon: Icon(
                         Icons.image,
                         color: Colors.blue,
                       )),
+
+                  // image picker from camera
                   IconButton(
                       onPressed: () {},
                       icon: Icon(
@@ -135,11 +134,17 @@ class _ChatInputFieldState extends State<ChatInputField> {
               ),
             ),
           ),
+
+          // send message button
           MaterialButton(
             padding: EdgeInsets.symmetric(
                 vertical: mq.height * 0.01, horizontal: mq.width * 0.025),
             minWidth: 0,
-            onPressed: () {},
+            onPressed: () {
+              if (_textEditingController.text.trim().isNotEmpty) {
+                APIs.sendMessage(widget.chatUser, _textEditingController.text);
+              }
+            },
             child: Icon(
               Icons.send,
               color: Colors.white,
