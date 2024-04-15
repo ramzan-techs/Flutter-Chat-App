@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:we_chat/api/apis.dart';
+import 'package:we_chat/helper/my_date_util.dart';
 import 'package:we_chat/main.dart';
 import 'package:we_chat/models/message.dart';
 
@@ -53,16 +54,23 @@ class _ChatCardState extends State<ChatCard> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      widget.message.sent,
+                      MyDateUtil.getformattedDate(
+                          context: context, time: widget.message.sent),
                       style: TextStyle(fontSize: 13),
                     ),
                     SizedBox(
                       width: 4,
                     ),
-                    Icon(
-                      Icons.done_all_rounded,
-                      size: 18,
-                    )
+                    widget.message.read.isEmpty
+                        ? Icon(
+                            Icons.done_all_rounded,
+                            size: 18,
+                          )
+                        : Icon(
+                            Icons.done_all_rounded,
+                            size: 18,
+                            color: Colors.blue,
+                          )
                   ],
                 ),
               ],
@@ -74,6 +82,9 @@ class _ChatCardState extends State<ChatCard> {
   }
 
   Widget _blueMsg() {
+    if (widget.message.read.isEmpty) {
+      APIs.updateMessageReadStatus(widget.message);
+    }
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
@@ -108,7 +119,8 @@ class _ChatCardState extends State<ChatCard> {
                   ),
                 ),
                 Text(
-                  widget.message.sent,
+                  MyDateUtil.getformattedDate(
+                      context: context, time: widget.message.sent),
                   style: TextStyle(fontSize: 13),
                 ),
               ],
