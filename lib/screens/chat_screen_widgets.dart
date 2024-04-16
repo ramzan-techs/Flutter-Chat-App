@@ -142,7 +142,9 @@ class _ChatInputFieldState extends State<ChatInputField> {
             minWidth: 0,
             onPressed: () {
               if (_textEditingController.text.trim().isNotEmpty) {
-                APIs.sendMessage(widget.chatUser, _textEditingController.text);
+                APIs.sendMessage(
+                    widget.chatUser, _textEditingController.text.trim());
+                _textEditingController.text = "";
               }
             },
             child: Icon(

@@ -6,7 +6,7 @@ import 'package:we_chat/api/apis.dart';
 import 'package:we_chat/models/chat_user.dart';
 import 'package:we_chat/models/message.dart';
 import 'package:we_chat/screens/chat_screen_widgets.dart';
-import 'package:we_chat/widgets/chat_card.dart';
+import 'package:we_chat/widgets/message_card.dart';
 
 class ChatScreen extends StatefulWidget {
   final ChatUser user;
@@ -59,7 +59,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     return ListView.builder(
                         itemCount: _list.length,
                         itemBuilder: (context, index) {
-                          return ChatCard(
+                          return MessageCard(
                             message: _list[index],
                           );
                         });

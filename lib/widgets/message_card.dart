@@ -4,14 +4,14 @@ import 'package:we_chat/helper/my_date_util.dart';
 import 'package:we_chat/main.dart';
 import 'package:we_chat/models/message.dart';
 
-class ChatCard extends StatefulWidget {
-  const ChatCard({super.key, required this.message});
+class MessageCard extends StatefulWidget {
+  const MessageCard({super.key, required this.message});
   final Message message;
   @override
-  State<ChatCard> createState() => _ChatCardState();
+  State<MessageCard> createState() => _MessageCardState();
 }
 
-class _ChatCardState extends State<ChatCard> {
+class _MessageCardState extends State<MessageCard> {
   @override
   Widget build(BuildContext context) {
     return APIs.user.uid == widget.message.fromId ? _greenMsg() : _blueMsg();
@@ -104,9 +104,9 @@ class _ChatCardState extends State<ChatCard> {
               color: Color.fromARGB(255, 208, 223, 234),
               border: Border.all(color: Colors.lightBlue),
               borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(30),
-                  topRight: Radius.circular(30),
-                  bottomRight: Radius.circular(30)),
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
+                  bottomRight: Radius.circular(20)),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
