@@ -67,9 +67,27 @@ class _ChatUserCardState extends State<ChatUserCard> {
               title: Text(widget.user.name),
 
               //user last message in chat
-              subtitle: Text(
-                _message != null ? _message!.msg : widget.user.about,
-                maxLines: 1,
+              subtitle: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _message == null
+                      ? SizedBox()
+                      : _message!.fromId == APIs.user.uid &&
+                              _message!.read.isEmpty
+                          ? Icon(
+                              Icons.done_all_rounded,
+                              size: 18,
+                            )
+                          : Icon(
+                              Icons.done_all_rounded,
+                              color: Colors.blueAccent,
+                              size: 18,
+                            ),
+                  Text(
+                    _message != null ? _message!.msg : widget.user.about,
+                    maxLines: 1,
+                  ),
+                ],
               ),
 
               //time of last message

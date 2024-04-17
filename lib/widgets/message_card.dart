@@ -56,7 +56,7 @@ class _MessageCardState extends State<MessageCard> {
                     Text(
                       MyDateUtil.getformattedDate(
                           context: context, time: widget.message.sent),
-                      style: TextStyle(fontSize: 13),
+                      style: TextStyle(fontSize: 10),
                     ),
                     SizedBox(
                       width: 4,
@@ -64,11 +64,11 @@ class _MessageCardState extends State<MessageCard> {
                     widget.message.read.isEmpty
                         ? Icon(
                             Icons.done_all_rounded,
-                            size: 18,
+                            size: 15,
                           )
                         : Icon(
                             Icons.done_all_rounded,
-                            size: 18,
+                            size: 15,
                             color: Colors.blue,
                           )
                   ],
