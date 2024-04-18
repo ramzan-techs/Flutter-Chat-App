@@ -33,6 +33,15 @@ class _ChatScreenState extends State<ChatScreen> {
         statusBarColor: Colors.blue, statusBarBrightness: Brightness.light));
   }
 
+  // to control back button when emoji is shown
+  bool _emojiBackLogic() {
+    if (_isEmojiShown) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -44,66 +53,76 @@ class _ChatScreenState extends State<ChatScreen> {
               _isEmojiShown = !_isEmojiShown;
             });
         },
-        child: Scaffold(
-          appBar: AppBar(
-            automaticallyImplyLeading: false,
-            flexibleSpace: appBar(
-              user: widget.user,
+        child: PopScope(
+          canPop: _emojiBackLogic(),
+          onPopInvoked: (didPop) {
+            setState(() {
+              _isEmojiShown = !_isEmojiShown;
+            });
+          },
+          child: Scaffold(
+            appBar: AppBar(
+              automaticallyImplyLeading: false,
+              flexibleSpace: appBar(
+                user: widget.user,
+              ),
             ),
-          ),
-          body: Column(children: [
-            Expanded(
-                child: StreamBuilder(
-              stream: APIs.getAllMessages(widget.user),
-              builder: ((context, snapshot) {
-                switch (snapshot.connectionState) {
-                  case ConnectionState.waiting:
-                  case ConnectionState.none:
-                    return const Center(
-                      child: SizedBox(),
-                    );
-
-                  case ConnectionState.active:
-                  case ConnectionState.done:
-                    final data = snapshot.data?.docs;
-                    _list =
-                        data?.map((e) => Message.fromJson(e.data())).toList() ??
-                            [];
-
-                    if (_list.isNotEmpty) {
-                      return ListView.builder(
-                          itemCount: _list.length,
-                          itemBuilder: (context, index) {
-                            return MessageCard(
-                              message: _list[index],
-                            );
-                          });
-                    } else {
-                      return Center(
-                        child: Text(
-                          'Say Hii👋!',
-                          style: TextStyle(fontSize: 20),
-                        ),
+            body: Column(children: [
+              Expanded(
+                  child: StreamBuilder(
+                stream: APIs.getAllMessages(widget.user),
+                builder: ((context, snapshot) {
+                  switch (snapshot.connectionState) {
+                    case ConnectionState.waiting:
+                    case ConnectionState.none:
+                      return const Center(
+                        child: SizedBox(),
                       );
-                    }
-                }
-              }),
-            )),
-            ChatInputField(),
-            if (_isEmojiShown)
-              SizedBox(
-                height: mq.height * 0.4,
-                child: EmojiPicker(
-                  textEditingController: _textEditingController,
-                  config: Config(
-                    emojiViewConfig: EmojiViewConfig(
-                      // Issue: https://github.com/flutter/flutter/issues/28894
-                      emojiSizeMax: 28 * (Platform.isIOS ? 1.20 : 1.0),
+
+                    case ConnectionState.active:
+                    case ConnectionState.done:
+                      final data = snapshot.data?.docs;
+                      _list = data
+                              ?.map((e) => Message.fromJson(e.data()))
+                              .toList() ??
+                          [];
+
+                      if (_list.isNotEmpty) {
+                        return ListView.builder(
+                            reverse: true,
+                            itemCount: _list.length,
+                            itemBuilder: (context, index) {
+                              return MessageCard(
+                                message: _list[index],
+                              );
+                            });
+                      } else {
+                        return Center(
+                          child: Text(
+                            'Say Hii👋!',
+                            style: TextStyle(fontSize: 20),
+                          ),
+                        );
+                      }
+                  }
+                }),
+              )),
+              ChatInputField(),
+              if (_isEmojiShown)
+                SizedBox(
+                  height: mq.height * 0.4,
+                  child: EmojiPicker(
+                    textEditingController: _textEditingController,
+                    config: Config(
+                      emojiViewConfig: EmojiViewConfig(
+                        // Issue: https://github.com/flutter/flutter/issues/28894
+                        emojiSizeMax: 28 * (Platform.isIOS ? 1.20 : 1.0),
+                      ),
                     ),
                   ),
-                ),
-              )
-          ]),
+                )
+            ]),
+          ),
         ),
       ),
     );
