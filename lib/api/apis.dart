@@ -108,13 +108,14 @@ class APIs {
   }
 
   // for sending messages
-  static Future<void> sendMessage(ChatUser chatUser, String msg) async {
+  static Future<void> sendMessage(
+      ChatUser chatUser, String msg, Type type) async {
     final time = DateTime.now().millisecondsSinceEpoch.toString();
     // message to be send
     final Message message = Message(
         toId: chatUser.id,
         read: "",
-        type: Type.text,
+        type: type,
         sent: time,
         fromId: user.uid,
         msg: msg);
@@ -140,5 +141,23 @@ class APIs {
         .orderBy('sent', descending: true)
         .limit(1)
         .snapshots();
+  }
+
+  // for sending images in chat
+  static Future<void> sendChatImage(ChatUser chatUser, File file) async {
+    //getting extension of image
+    final ext = file.path.split('.').last;
+    final ref = storage.ref().child(
+        'images/${getConversationId(chatUser.id)}/${DateTime.now().millisecondsSinceEpoch}.$ext');
+    await ref
+        .putFile(file, SettableMetadata(contentType: 'image/$ext'))
+        .then((p0) {
+      log('Image data : ${p0.bytesTransferred / 1000} kb');
+    });
+
+    //updating image url in user data
+    final imageUrl = await ref.getDownloadURL();
+
+    await sendMessage(chatUser, imageUrl, Type.image);
   }
 }

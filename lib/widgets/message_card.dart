@@ -1,3 +1,5 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:we_chat/api/apis.dart';
 import 'package:we_chat/helper/my_date_util.dart';
@@ -24,10 +26,10 @@ class _MessageCardState extends State<MessageCard> {
         Flexible(
           child: Container(
             padding: EdgeInsets.only(
-                top: mq.width * 0.03,
-                left: mq.width * 0.03,
-                right: mq.width * 0.03,
-                bottom: mq.width * 0.01),
+                top: widget.message.type == Type.text ? mq.width * 0.03 : 4,
+                left: widget.message.type == Type.text ? mq.width * 0.03 : 4,
+                right: widget.message.type == Type.text ? mq.width * 0.03 : 4,
+                bottom: widget.message.type == Type.text ? mq.width * 0.03 : 4),
             margin: EdgeInsets.only(
                 top: mq.width * 0.03,
                 right: mq.width * 0.04,
@@ -45,10 +47,20 @@ class _MessageCardState extends State<MessageCard> {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(right: 8),
-                  child: Text(
-                    widget.message.msg,
-                    style: TextStyle(fontSize: 18, color: Colors.black87),
-                  ),
+                  child: widget.message.type == Type.text
+                      ? Text(
+                          widget.message.msg,
+                          style: TextStyle(fontSize: 18, color: Colors.black87),
+                        )
+                      : ClipRRect(
+                          borderRadius: BorderRadius.circular(15),
+                          child: CachedNetworkImage(
+                            placeholder: (context, url) => Icon(Icons.person),
+                            imageUrl: widget.message.msg,
+                            errorWidget: (context, url, error) =>
+                                Icon(Icons.image),
+                          ),
+                        ),
                 ),
                 Row(
                   mainAxisSize: MainAxisSize.min,
@@ -91,10 +103,10 @@ class _MessageCardState extends State<MessageCard> {
         Flexible(
           child: Container(
             padding: EdgeInsets.only(
-                top: mq.width * 0.03,
-                left: mq.width * 0.03,
-                right: mq.width * 0.03,
-                bottom: mq.width * 0.01),
+                top: widget.message.type == Type.text ? mq.width * 0.03 : 4,
+                left: widget.message.type == Type.text ? mq.width * 0.03 : 4,
+                right: widget.message.type == Type.text ? mq.width * 0.03 : 4,
+                bottom: widget.message.type == Type.text ? mq.width * 0.03 : 4),
             margin: EdgeInsets.only(
                 top: mq.width * 0.03,
                 bottom: mq.width * 0.03,
@@ -113,10 +125,20 @@ class _MessageCardState extends State<MessageCard> {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(right: 8),
-                  child: Text(
-                    widget.message.msg,
-                    style: TextStyle(fontSize: 18, color: Colors.black87),
-                  ),
+                  child: widget.message.type == Type.text
+                      ? Text(
+                          widget.message.msg,
+                          style: TextStyle(fontSize: 18, color: Colors.black87),
+                        )
+                      : ClipRRect(
+                          borderRadius: BorderRadius.circular(15),
+                          child: CachedNetworkImage(
+                            placeholder: (context, url) => Icon(Icons.person),
+                            imageUrl: widget.message.msg,
+                            errorWidget: (context, url, error) =>
+                                Icon(Icons.image),
+                          ),
+                        ),
                 ),
                 Text(
                   MyDateUtil.getformattedDate(

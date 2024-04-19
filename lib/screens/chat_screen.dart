@@ -1,9 +1,11 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 
 import 'package:we_chat/api/apis.dart';
 import 'package:we_chat/main.dart';
@@ -185,7 +187,16 @@ class _ChatScreenState extends State<ChatScreen> {
 
                   // image picker from camera
                   IconButton(
-                      onPressed: () {},
+                      onPressed: () async {
+                        final ImagePicker picker = ImagePicker();
+
+                        final XFile? image = await picker.pickImage(
+                            source: ImageSource.camera, imageQuality: 70);
+                        if (image != null) {
+                          log('Image Path : ${image.path}');
+                          APIs.sendChatImage(widget.user, File(image.path));
+                        }
+                      },
                       icon: Icon(
                         CupertinoIcons.camera,
                         color: Colors.blue,
@@ -206,7 +217,7 @@ class _ChatScreenState extends State<ChatScreen> {
             onPressed: () {
               if (_textEditingController.text.trim().isNotEmpty) {
                 APIs.sendMessage(
-                    widget.user, _textEditingController.text.trim());
+                    widget.user, _textEditingController.text.trim(), Type.text);
                 _textEditingController.text = "";
               }
             },
