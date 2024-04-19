@@ -70,23 +70,26 @@ class _ChatUserCardState extends State<ChatUserCard> {
               subtitle: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  _message == null
-                      ? SizedBox()
-                      : _message!.fromId == APIs.user.uid &&
-                              _message!.read.isEmpty
-                          ? Icon(
-                              Icons.done_all_rounded,
-                              size: 18,
-                            )
-                          : Icon(
-                              Icons.done_all_rounded,
-                              color: Colors.blueAccent,
-                              size: 18,
-                            ),
-                  Text(
-                    _message != null ? _message!.msg : widget.user.about,
-                    maxLines: 1,
-                  ),
+                  if (_message != null)
+                    _message!.fromId != APIs.user.uid
+                        ? SizedBox()
+                        : _message!.read.isEmpty
+                            ? Icon(
+                                Icons.done_all_rounded,
+                                size: 18,
+                              )
+                            : Icon(
+                                Icons.done_all_rounded,
+                                color: Colors.blueAccent,
+                                size: 18,
+                              ),
+                  _message != null
+                      ? Text(
+                          _message!.msg.length > 30
+                              ? _message!.msg.substring(0, 30) + '...'
+                              : _message!.msg,
+                        )
+                      : Text("No Chat Found!"),
                 ],
               ),
 

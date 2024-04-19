@@ -1,5 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 import 'package:we_chat/api/apis.dart';
 import 'package:we_chat/helper/my_date_util.dart';
@@ -25,34 +25,66 @@ class _MessageCardState extends State<MessageCard> {
       children: [
         Flexible(
           child: Container(
-            padding: EdgeInsets.only(
-                top: widget.message.type == Type.text ? mq.width * 0.03 : 4,
-                left: widget.message.type == Type.text ? mq.width * 0.03 : 4,
-                right: widget.message.type == Type.text ? mq.width * 0.03 : 4,
-                bottom: widget.message.type == Type.text ? mq.width * 0.03 : 4),
-            margin: EdgeInsets.only(
-                top: mq.width * 0.03,
-                right: mq.width * 0.04,
-                left: mq.width * 0.2),
-            decoration: BoxDecoration(
-              color: Color.fromARGB(255, 145, 225, 167),
-              border: Border.all(color: Colors.green),
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20),
-                  topRight: Radius.circular(20),
-                  bottomLeft: Radius.circular(20)),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(right: 8),
-                  child: widget.message.type == Type.text
-                      ? Text(
-                          widget.message.msg,
-                          style: TextStyle(fontSize: 18, color: Colors.black87),
-                        )
-                      : ClipRRect(
+              padding: EdgeInsets.only(
+                  top: widget.message.type == Type.text ? mq.width * 0.03 : 4,
+                  left: widget.message.type == Type.text ? mq.width * 0.03 : 4,
+                  right: widget.message.type == Type.text ? mq.width * 0.03 : 4,
+                  bottom:
+                      widget.message.type == Type.text ? mq.width * 0.03 : 4),
+              margin: EdgeInsets.only(
+                  top: mq.width * 0.03,
+                  right: mq.width * 0.04,
+                  left: mq.width * 0.2),
+              decoration: BoxDecoration(
+                color: Color.fromARGB(255, 145, 225, 167),
+                border: Border.all(color: Colors.green),
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.circular(20),
+                    bottomLeft: Radius.circular(20)),
+              ),
+              child: widget.message.type == Type.text
+                  ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(right: 8),
+                          child: Text(
+                            widget.message.msg,
+                            style:
+                                TextStyle(fontSize: 18, color: Colors.black87),
+                          ),
+                        ),
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              MyDateUtil.getformattedDate(
+                                  context: context, time: widget.message.sent),
+                              style: TextStyle(fontSize: 10),
+                            ),
+                            SizedBox(
+                              width: 4,
+                            ),
+                            widget.message.read.isEmpty
+                                ? Icon(
+                                    Icons.done_all_rounded,
+                                    size: 15,
+                                  )
+                                : Icon(
+                                    Icons.done_all_rounded,
+                                    size: 15,
+                                    color: Colors.blue,
+                                  )
+                          ],
+                        ),
+                      ],
+                    )
+                  :
+                  // if image is the message
+                  Stack(
+                      children: [
+                        ClipRRect(
                           borderRadius: BorderRadius.circular(15),
                           child: CachedNetworkImage(
                             placeholder: (context, url) => Icon(Icons.person),
@@ -61,33 +93,55 @@ class _MessageCardState extends State<MessageCard> {
                                 Icon(Icons.image),
                           ),
                         ),
-                ),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      MyDateUtil.getformattedDate(
-                          context: context, time: widget.message.sent),
-                      style: TextStyle(fontSize: 10),
-                    ),
-                    SizedBox(
-                      width: 4,
-                    ),
-                    widget.message.read.isEmpty
-                        ? Icon(
-                            Icons.done_all_rounded,
-                            size: 15,
-                          )
-                        : Icon(
-                            Icons.done_all_rounded,
-                            size: 15,
-                            color: Colors.blue,
-                          )
-                  ],
-                ),
-              ],
-            ),
-          ),
+                        Positioned(
+                            bottom: 0,
+                            right: 2,
+                            child: Container(
+                              height: 30,
+                              width: 150,
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: [
+                                    Colors.transparent,
+                                    Colors.black54,
+                                  ],
+                                ),
+                              ),
+                            )),
+                        Positioned(
+                          bottom: 4,
+                          right: 10,
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                MyDateUtil.getformattedDate(
+                                    context: context,
+                                    time: widget.message.sent),
+                                style: TextStyle(
+                                    fontSize: 14, color: Colors.white),
+                              ),
+                              SizedBox(
+                                width: 4,
+                              ),
+                              widget.message.read.isEmpty
+                                  ? Icon(
+                                      Icons.done_all_rounded,
+                                      size: 17,
+                                      color: Colors.white,
+                                    )
+                                  : Icon(
+                                      Icons.done_all_rounded,
+                                      size: 17,
+                                      color: Colors.blue,
+                                    )
+                            ],
+                          ),
+                        ),
+                      ],
+                    )),
         ),
       ],
     );
@@ -120,33 +174,103 @@ class _MessageCardState extends State<MessageCard> {
                   topRight: Radius.circular(20),
                   bottomRight: Radius.circular(20)),
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(right: 8),
-                  child: widget.message.type == Type.text
-                      ? Text(
+            child: widget.message.type == Type.text
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(right: 8),
+                        child: Text(
                           widget.message.msg,
                           style: TextStyle(fontSize: 18, color: Colors.black87),
-                        )
-                      : ClipRRect(
-                          borderRadius: BorderRadius.circular(15),
-                          child: CachedNetworkImage(
-                            placeholder: (context, url) => Icon(Icons.person),
-                            imageUrl: widget.message.msg,
-                            errorWidget: (context, url, error) =>
-                                Icon(Icons.image),
-                          ),
                         ),
-                ),
-                Text(
-                  MyDateUtil.getformattedDate(
-                      context: context, time: widget.message.sent),
-                  style: TextStyle(fontSize: 13),
-                ),
-              ],
-            ),
+                      ),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            MyDateUtil.getformattedDate(
+                                context: context, time: widget.message.sent),
+                            style: TextStyle(fontSize: 10),
+                          ),
+                          SizedBox(
+                            width: 4,
+                          ),
+                          widget.message.read.isEmpty
+                              ? Icon(
+                                  Icons.done_all_rounded,
+                                  size: 15,
+                                )
+                              : Icon(
+                                  Icons.done_all_rounded,
+                                  size: 15,
+                                  color: Colors.blue,
+                                )
+                        ],
+                      ),
+                    ],
+                  )
+                :
+                // if image is the message
+                Stack(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(15),
+                        child: CachedNetworkImage(
+                          placeholder: (context, url) => Icon(Icons.person),
+                          imageUrl: widget.message.msg,
+                          errorWidget: (context, url, error) =>
+                              Icon(Icons.image),
+                        ),
+                      ),
+                      Positioned(
+                          bottom: 0,
+                          right: 2,
+                          child: Container(
+                            height: 30,
+                            width: 150,
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: [
+                                  Colors.transparent,
+                                  Colors.black54,
+                                ],
+                              ),
+                            ),
+                          )),
+                      Positioned(
+                        bottom: 4,
+                        right: 10,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              MyDateUtil.getformattedDate(
+                                  context: context, time: widget.message.sent),
+                              style:
+                                  TextStyle(fontSize: 14, color: Colors.white),
+                            ),
+                            SizedBox(
+                              width: 4,
+                            ),
+                            widget.message.read.isEmpty
+                                ? Icon(
+                                    Icons.done_all_rounded,
+                                    size: 17,
+                                    color: Colors.white,
+                                  )
+                                : Icon(
+                                    Icons.done_all_rounded,
+                                    size: 17,
+                                    color: Colors.blue,
+                                  )
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
           ),
         ),
       ],
