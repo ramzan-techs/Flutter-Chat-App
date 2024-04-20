@@ -84,11 +84,13 @@ class _ChatUserCardState extends State<ChatUserCard> {
                                 size: 18,
                               ),
                   _message != null
-                      ? Text(
-                          _message!.msg.length > 30
-                              ? _message!.msg.substring(0, 30) + '...'
-                              : _message!.msg,
-                        )
+                      ? _message!.type == Type.text
+                          ? Text(
+                              _message!.msg.length > 30
+                                  ? _message!.msg.substring(0, 30) + '...'
+                                  : _message!.msg,
+                            )
+                          : Text("Image")
                       : Text("No Chat Found!"),
                 ],
               ),

@@ -26,7 +26,7 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   List<Message> _list = [];
   final _textEditingController = TextEditingController();
-  bool _isEmojiShown = false;
+  bool _isEmojiShown = false, _isImageUploading = false;
 
   @override
   void initState() {
@@ -109,6 +109,13 @@ class _ChatScreenState extends State<ChatScreen> {
                   }
                 }),
               )),
+              if (_isImageUploading)
+                Padding(
+                  padding: EdgeInsets.all(8),
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                  ),
+                ),
               ChatInputField(),
               if (_isEmojiShown)
                 SizedBox(
@@ -179,7 +186,22 @@ class _ChatScreenState extends State<ChatScreen> {
 
                   // image picker from gallery
                   IconButton(
-                      onPressed: () {},
+                      onPressed: () async {
+                        final ImagePicker picker = ImagePicker();
+
+                        final List<XFile> images =
+                            await picker.pickMultiImage(imageQuality: 70);
+                        for (var image in images) {
+                          log('Image Path : ${image.path}');
+                          setState(() {
+                            _isImageUploading = true;
+                          });
+                          APIs.sendChatImage(widget.user, File(image.path));
+                          setState(() {
+                            _isImageUploading = false;
+                          });
+                        }
+                      },
                       icon: Icon(
                         Icons.image,
                         color: Colors.blue,
@@ -194,7 +216,13 @@ class _ChatScreenState extends State<ChatScreen> {
                             source: ImageSource.camera, imageQuality: 70);
                         if (image != null) {
                           log('Image Path : ${image.path}');
+                          setState(() {
+                            _isImageUploading = true;
+                          });
                           APIs.sendChatImage(widget.user, File(image.path));
+                          setState(() {
+                            _isImageUploading = false;
+                          });
                         }
                       },
                       icon: Icon(

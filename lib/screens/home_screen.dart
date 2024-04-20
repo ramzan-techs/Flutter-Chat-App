@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:we_chat/api/apis.dart';
 
@@ -26,6 +29,20 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     APIs.getSelfInfo();
+
+    // for updating online status when app starts
+    APIs.updateActiveTime(true);
+
+    // checking lifecycle when app goes in background
+    // resumed --> again comes online screen opens
+    // paused --> screen is goes in background
+
+    SystemChannels.lifecycle.setMessageHandler((message) {
+      log(message.toString());
+      if (message.toString().contains('paused')) APIs.updateActiveTime(false);
+      if (message.toString().contains('resumed')) APIs.updateActiveTime(true);
+      return Future.value(message);
+    });
   }
 
   bool _searchingBackLogic() {

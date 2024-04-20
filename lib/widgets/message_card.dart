@@ -87,7 +87,14 @@ class _MessageCardState extends State<MessageCard> {
                         ClipRRect(
                           borderRadius: BorderRadius.circular(15),
                           child: CachedNetworkImage(
-                            placeholder: (context, url) => Icon(Icons.person),
+                            placeholder: (context, url) {
+                              return Padding(
+                                padding: EdgeInsets.all(30),
+                                child: const CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
+                              );
+                            },
                             imageUrl: widget.message.msg,
                             errorWidget: (context, url, error) =>
                                 Icon(Icons.image),
@@ -95,11 +102,13 @@ class _MessageCardState extends State<MessageCard> {
                         ),
                         Positioned(
                             bottom: 0,
-                            right: 2,
+                            right: 0,
                             child: Container(
                               height: 30,
                               width: 150,
                               decoration: BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                    bottomRight: Radius.circular(15)),
                                 gradient: LinearGradient(
                                   begin: Alignment.topLeft,
                                   end: Alignment.bottomRight,
@@ -217,7 +226,14 @@ class _MessageCardState extends State<MessageCard> {
                       ClipRRect(
                         borderRadius: BorderRadius.circular(15),
                         child: CachedNetworkImage(
-                          placeholder: (context, url) => Icon(Icons.person),
+                          placeholder: (context, url) {
+                            return Padding(
+                              padding: EdgeInsets.all(30),
+                              child: const CircularProgressIndicator(
+                                strokeWidth: 2,
+                              ),
+                            );
+                          },
                           imageUrl: widget.message.msg,
                           errorWidget: (context, url, error) =>
                               Icon(Icons.image),
@@ -225,11 +241,13 @@ class _MessageCardState extends State<MessageCard> {
                       ),
                       Positioned(
                           bottom: 0,
-                          right: 2,
+                          right: 0,
                           child: Container(
                             height: 30,
                             width: 150,
                             decoration: BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                  bottomRight: Radius.circular(15)),
                               gradient: LinearGradient(
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
