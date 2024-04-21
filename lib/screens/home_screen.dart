@@ -28,6 +28,9 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+
+    SystemChrome.setSystemUIOverlayStyle(
+        SystemUiOverlayStyle(statusBarColor: Colors.red));
     APIs.getSelfInfo();
 
     // for updating online status when app starts
@@ -39,8 +42,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
     SystemChannels.lifecycle.setMessageHandler((message) {
       log(message.toString());
-      if (message.toString().contains('paused')) APIs.updateActiveTime(false);
-      if (message.toString().contains('resumed')) APIs.updateActiveTime(true);
+      if (APIs.auth.currentUser != null) {
+        if (message.toString().contains('paused')) APIs.updateActiveTime(false);
+        if (message.toString().contains('resumed')) APIs.updateActiveTime(true);
+      }
       return Future.value(message);
     });
   }

@@ -14,7 +14,7 @@ class MyDateUtil {
     if (date.day == sent.day &&
         date.month == sent.month &&
         date.year == sent.year) {
-      return TimeOfDay.fromDateTime(date).format(context);
+      return TimeOfDay.fromDateTime(sent).format(context);
     }
 
     return '${sent.day} ${_getMonth(sent)}';

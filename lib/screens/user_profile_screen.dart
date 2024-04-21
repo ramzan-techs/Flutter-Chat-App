@@ -171,12 +171,16 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           onPressed: () async {
             //show progress bar
             Dialogs.showProgressBar(context);
+
+            await APIs.updateActiveTime(false);
             await FirebaseAuth.instance.signOut().then((value) async {
               await GoogleSignIn().signOut();
               // for hiding progress bar
               Navigator.pop(context);
               //for poping out home screen form stack
               Navigator.pop(context);
+
+              APIs.auth = FirebaseAuth.instance;
               //for moving to login screen
               Navigator.pushReplacement(
                   context, MaterialPageRoute(builder: (_) => LoginScreen()));
