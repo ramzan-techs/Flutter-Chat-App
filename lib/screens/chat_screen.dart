@@ -13,6 +13,7 @@ import 'package:we_chat/main.dart';
 import 'package:we_chat/models/chat_user.dart';
 import 'package:we_chat/models/message.dart';
 import 'package:we_chat/screens/chat_screen_widgets.dart';
+import 'package:we_chat/screens/user_profile_view.dart';
 import 'package:we_chat/widgets/message_card.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -65,8 +66,17 @@ class _ChatScreenState extends State<ChatScreen> {
           appBar: AppBar(
             systemOverlayStyle: SystemUiOverlayStyle.light,
             automaticallyImplyLeading: false,
-            flexibleSpace: appBar(
-              user: widget.user,
+            flexibleSpace: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) =>
+                            UserProfileView(chatUser: widget.user)));
+              },
+              child: appBar(
+                user: widget.user,
+              ),
             ),
           ),
           body: Column(children: [

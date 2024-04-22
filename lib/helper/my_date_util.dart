@@ -2,9 +2,14 @@ import 'package:flutter/material.dart';
 
 class MyDateUtil {
   static String getformattedDate(
-      {required BuildContext context, required String time}) {
+      {required BuildContext context,
+      required String time,
+      bool showDate = false}) {
     final date = DateTime.fromMillisecondsSinceEpoch(int.parse(time));
-    return TimeOfDay.fromDateTime(date).format(context);
+
+    return showDate
+        ? "${date.day} ${_getMonth(date)} ${date.year}"
+        : TimeOfDay.fromDateTime(date).format(context);
   }
 
   static String getLastMessageTime(
