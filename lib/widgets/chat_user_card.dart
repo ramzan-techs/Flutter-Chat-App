@@ -9,6 +9,7 @@ import 'package:we_chat/models/message.dart';
 import 'package:we_chat/screens/chat_screen.dart';
 
 import '../main.dart';
+import 'dialogs/profile_dialog.dart';
 
 class ChatUserCard extends StatefulWidget {
   final ChatUser user;
@@ -49,16 +50,25 @@ class _ChatUserCardState extends State<ChatUserCard> {
 
             return ListTile(
               //user profile pic
-              leading: ClipRRect(
-                borderRadius: BorderRadius.circular(mq.height * .3),
-                child: CachedNetworkImage(
-                  fit: BoxFit.cover,
-                  height: mq.height * .055,
-                  width: mq.height * .055,
-                  placeholder: (context, url) => Icon(Icons.person),
-                  imageUrl: widget.user.image,
-                  errorWidget: (context, url, error) => const CircleAvatar(
-                    child: Icon(CupertinoIcons.person),
+              leading: InkWell(
+                onTap: () {
+                  showDialog(
+                      context: context,
+                      builder: (_) => ProfileDialog(
+                            user: widget.user,
+                          ));
+                },
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(mq.height * .3),
+                  child: CachedNetworkImage(
+                    fit: BoxFit.cover,
+                    height: mq.height * .055,
+                    width: mq.height * .055,
+                    placeholder: (context, url) => Icon(Icons.person),
+                    imageUrl: widget.user.image,
+                    errorWidget: (context, url, error) => const CircleAvatar(
+                      child: Icon(CupertinoIcons.person),
+                    ),
                   ),
                 ),
               ),
